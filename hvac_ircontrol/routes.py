@@ -40,11 +40,6 @@ def get_hvac_variables():
     return variables
 
 
-@app.route('/about')
-def about():
-    return home()
-
-
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
@@ -79,7 +74,6 @@ def settings():
 
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
-# @app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('home.html', title='Home')
 
