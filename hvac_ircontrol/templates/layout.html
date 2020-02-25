@@ -28,9 +28,10 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
                 <a class="nav-item nav-link" href="{{ url_for('settings') }}">Settings</a>
-                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register user</a>
+                <a class="nav-item nav-link" href="{{ url_for('reset_password') }}">Reset password</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
               {% endif %}

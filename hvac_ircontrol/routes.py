@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from hvac_ircontrol.hvac import HVAC
 from hvac_ircontrol.mitsubishi import ClimateMode, VanneHorizontalMode, FanMode, VanneVerticalMode
 from hvac_ircontrol import app, db, bcrypt
-from hvac_ircontrol.forms import RegistrationForm, LoginForm
+from hvac_ircontrol.forms import RegistrationForm, LoginForm, ResetPasswordForm
 from hvac_ircontrol.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -152,3 +152,15 @@ def build_render_template(message):
                            vanne_vertical_mode=vanne_vertical_mode_presel,
                            message=message
                            )
+
+
+@app.route("/reset_password", methods=['GET', 'POST'])
+def reset_password():
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        current_user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', title='Reset Password', form=form)
