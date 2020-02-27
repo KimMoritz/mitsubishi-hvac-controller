@@ -6,8 +6,6 @@ from hvac_ircontrol.forms import RegistrationForm, LoginForm, ResetPasswordForm
 from hvac_ircontrol.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 
-# from hvac_ircontrol import Display
-
 
 def get_hvac_variables():
     temps = {'16': 16, '17': 17, '18': 18, '19': 19, '20': 20, '21': 21, '22': 22, '23': 23}
@@ -66,8 +64,6 @@ def settings():
             hvac_variables.get('vanne_horizontal_modes').get(vanne_horizontal_mode),
             hvac_variables.get('vanne_vertical_modes').get(vanne_vertical_mode)
         )
-        # display = Display()
-        # display.show_settings(temp=request.form.get('temp'), speed=request.form.get('fan_mode'))
 
         return build_render_template(message='Temperature set!')
 
@@ -84,8 +80,6 @@ def turn_off():
     hvac = HVAC()
     hvac.turn_off()
     print('Turned off!')
-    # display = Display()
-    # display.show_settings(temp=request.form.get('temp'), speed=request.form.get('fan_mode'))
     return build_render_template(message='Turned off!')
 
 
