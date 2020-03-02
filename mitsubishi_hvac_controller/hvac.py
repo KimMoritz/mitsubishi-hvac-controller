@@ -1,3 +1,4 @@
+import hvac_ircontrol
 from hvac_ircontrol.ir_sender import LogLevel
 from hvac_ircontrol.mitsubishi import Mitsubishi, ISeeMode, AreaMode, PowerfulMode
 

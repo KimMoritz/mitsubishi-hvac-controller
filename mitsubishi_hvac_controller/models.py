@@ -1,4 +1,4 @@
-from hvac_ircontrol import db, login_manager
+from mitsubishi_hvac_controller import db, login_manager
 from flask_login import UserMixin
 
 

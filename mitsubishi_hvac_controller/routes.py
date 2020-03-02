@@ -1,9 +1,9 @@
 from flask import render_template, url_for, flash, redirect, request
-from hvac_ircontrol.hvac import HVAC
+from mitsubishi_hvac_controller.hvac import HVAC
 from hvac_ircontrol.mitsubishi import ClimateMode, VanneHorizontalMode, FanMode, VanneVerticalMode
-from hvac_ircontrol import app, db, bcrypt
-from hvac_ircontrol.forms import RegistrationForm, LoginForm, ResetPasswordForm
-from hvac_ircontrol.models import User
+from mitsubishi_hvac_controller import app, db, bcrypt
+from mitsubishi_hvac_controller.forms import RegistrationForm, LoginForm, ResetPasswordForm
+from mitsubishi_hvac_controller.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 
 
