@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from hvac_ircontrol.models import User
+from mitsubishi_hvac_controller.models import User
 
 
 class RegistrationForm(FlaskForm):

@@ -13,7 +13,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-from hvac_ircontrol.models import User
+from mitsubishi_hvac_controller.models import User
 db.create_all()
 if len(db.session.query(User).all()) == 0:
     print("Creating default admin user. Please change password ASAP.")
@@ -26,4 +26,4 @@ if len(db.session.query(User).all()) == 0:
     db.session.add(user)
     db.session.commit()
 
-from hvac_ircontrol import routes
+from mitsubishi_hvac_controller import routes
