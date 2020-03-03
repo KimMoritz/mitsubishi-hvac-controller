@@ -15,3 +15,20 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return str(self.username) + str(self.email)
+
+
+class Setting(db.Model):
+    setting = db.Column(db.String(8), primary_key=True)
+    temp = db.Column(db.String(2), nullable=False)
+    fan_mode = db.Column(db.String(8), nullable=False)
+    climate_mode = db.Column(db.String(4), nullable=False)
+    vanne_horizontal_mode = db.Column(db.String(16), nullable=False)
+    vanne_vertical_mode = db.Column(db.String(16), nullable=False)
+
+    def __repr__(self):
+        return "Settings saved as " +  str(self.setting) + ": (" + \
+               str(self.temp) + ", " + \
+               str(self.fan_mode) + ", " + \
+               str(self.climate_mode) + ", " + \
+               str(self.vanne_horizontal_mode) + ", " + \
+               str(self.vanne_vertical_mode) + ")"

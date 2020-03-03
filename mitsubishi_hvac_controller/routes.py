@@ -3,8 +3,24 @@ from mitsubishi_hvac_controller.hvac import HVAC
 from hvac_ircontrol.mitsubishi import ClimateMode, VanneHorizontalMode, FanMode, VanneVerticalMode
 from mitsubishi_hvac_controller import app, db, bcrypt
 from mitsubishi_hvac_controller.forms import RegistrationForm, LoginForm, ResetPasswordForm
-from mitsubishi_hvac_controller.models import User
+from mitsubishi_hvac_controller.models import User, Setting
 from flask_login import login_user, current_user, logout_user, login_required
+
+
+def write_settings_to_db(setting, temp, fan_mode, climate_mode, vanne_horizontal_mode, vanne_vertical_mode):
+    setting = Setting(
+        setting=setting,
+        temp=temp,
+        fan_mode=fan_mode,
+        climate_mode=climate_mode,
+        vanne_horizontal_mode=vanne_horizontal_mode,
+        vanne_vertical_mode=vanne_vertical_mode
+    )
+    last = db.session.query(Setting).get('last')
+    if last is not None:
+        db.session.delete(last)
+    db.session.add(setting)
+    db.session.commit()
 
 
 def get_hvac_variables():
@@ -46,6 +62,7 @@ def settings():
     if request.method == 'POST':
         hvac = HVAC()
 
+        #TODO: Add to dict which is exploded in parameter list in method calls below
         temp = request.form.get('temp')
         fan_mode = request.form.get('fan_mode')
         climate_mode = request.form.get('climate_mode')
@@ -53,6 +70,13 @@ def settings():
         vanne_vertical_mode = request.form.get('vanne_vertical_mode')
 
         print(temp + fan_mode + climate_mode + vanne_horizontal_mode + vanne_vertical_mode)
+
+        write_settings_to_db(setting='last',
+                             temp=temp,
+                             fan_mode=fan_mode,
+                             climate_mode=climate_mode,
+                             vanne_horizontal_mode=vanne_horizontal_mode,
+                             vanne_vertical_mode=vanne_vertical_mode)
 
         hvac_variables = get_hvac_variables()
         print(request.form.get(hvac_variables.get('temps').get(temp)))
