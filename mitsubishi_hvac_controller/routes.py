@@ -31,23 +31,13 @@ def settings():
     if request.method == 'POST':
         hvac = HVAC()
 
-        temp = request.form.get('temp')
-        fan_mode = request.form.get('fan_mode')
-        climate_mode = request.form.get('climate_mode')
-        vanne_horizontal_mode = request.form.get('vanne_horizontal_mode')
-        vanne_vertical_mode = request.form.get('vanne_vertical_mode')
-
-        req_form_variables = {'temp': temp,
-                              'fan_mode': fan_mode,
-                              'climate_mode': climate_mode,
-                              'vanne_horizontal_mode': vanne_horizontal_mode,
-                              'vanne_vertical_mode': vanne_vertical_mode}
+        req_form_variables = {'temp': request.form.get('temp'),
+                              'fan_mode': request.form.get('fan_mode'),
+                              'climate_mode': request.form.get('climate_mode'),
+                              'vanne_horizontal_mode': request.form.get('vanne_horizontal_mode'),
+                              'vanne_vertical_mode': request.form.get('vanne_vertical_mode')}
 
         write_settings_to_db(setting='last', **req_form_variables)
-
-        hvac_variables = hvac.get_hvac_variables()
-        print(request.form.get(hvac_variables.get('temps').get(temp)))
-
         hvac.set_heat(**req_form_variables)
 
         return build_render_template(message='Temperature set!')
