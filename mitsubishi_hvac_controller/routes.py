@@ -103,11 +103,13 @@ def logout():
 def build_render_template(message):
     hvac = HVAC()
     hvac_variables = hvac.get_hvac_variables()
-    temp_presel = hvac_variables.get('temps').get('20')
-    fan_mode_presel = hvac_variables.get('fan_modes').get(FanMode.Speed1)
-    climate_mode_presel = hvac_variables.get('climate_modes').get(ClimateMode.Hot)
-    vanne_horizontal_mode_presel = hvac_variables.get('vanne_horizontal_modes').get(VanneHorizontalMode.Middle)
-    vanne_vertical_mode_presel = hvac_variables.get('vanne_vertical_modes').get(VanneVerticalMode.Middle)
+
+    #TODO:change to last used, default to default (get both from db table "setting")
+    temp_presel = '20'
+    fan_mode_presel = 'Speed1'
+    climate_mode_presel = 'Hot'
+    vanne_horizontal_mode_presel = 'Middle'
+    vanne_vertical_mode_presel = 'Middle'
 
     return render_template('settings.html',
                            temps=hvac_variables.get('temps').keys(),
@@ -119,7 +121,7 @@ def build_render_template(message):
                            vanne_horizontal_modes=hvac_variables.get('vanne_horizontal_modes').keys(),
                            vanne_horizontal_mode_presel=vanne_horizontal_mode_presel,
                            vanne_vertical_modes=hvac_variables.get('vanne_vertical_modes').keys(),
-                           vanne_vertical_mode=vanne_vertical_mode_presel,
+                           vanne_vertical_mode_presel=vanne_vertical_mode_presel,
                            message=message
                            )
 
