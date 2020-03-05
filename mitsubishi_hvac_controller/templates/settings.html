@@ -14,31 +14,31 @@
             <label for="temp">Temperature</label>
             <select id="temp" name= temp class="form-control">
                 {% for temp in temps %}
-                <option value="{{temp}}">{{temp}}</option>
+                <option value="{{temp}}" {% if temp == temp_presel %} selected="selected" {% endif %}>{{temp}}</option>
                 {% endfor %}
             </select>
             <label for="fan_mode">Fan mode</label>
                 <select id="fan_mode" name= fan_mode class="form-control">
                     {% for fan_mode in fan_modes %}
-                    <option value="{{fan_mode}}">{{fan_mode}}</option>
+                    <option value="{{fan_mode}}" {% if fan_mode == fan_mode_presel %} selected="selected" {% endif %}>{{fan_mode}}</option>
                     {% endfor %}
                 </select>
             <label for="climate_mode">Fan mode</label>
             <select id="climate_mode" name= climate_mode class="form-control">
                 {% for climate_mode in climate_modes %}
-                <option value="{{climate_mode}}">{{climate_mode}}</option>
+                <option value="{{climate_mode}}" {% if climate_mode == climate_mode_presel %} selected="selected" {% endif %}>{{climate_mode}}</option>
                 {% endfor %}
             </select>
             <label for="vanne_horizontal_mode">Fan mode</label>
             <select id="vanne_horizontal_mode" name= vanne_horizontal_mode class="form-control">
                 {% for vanne_horizontal_mode in vanne_horizontal_modes %}
-                <option value="{{vanne_horizontal_mode}}">{{vanne_horizontal_mode}}</option>
+                <option value="{{vanne_horizontal_mode}}" {% if vanne_horizontal_mode == vanne_horizontal_mode_presel %} selected="selected" {% endif %}>{{vanne_horizontal_mode}}</option>
                 {% endfor %}
             </select>
             <label for="vanne_vertical_mode">Fan mode</label>
             <select id="vanne_vertical_mode" name= vanne_vertical_mode class="form-control">
                 {% for vanne_vertical_mode in vanne_vertical_modes %}
-                <option value="{{vanne_vertical_mode}}">{{vanne_vertical_mode}}</option>
+                <option value="{{vanne_vertical_mode}}" {% if vanne_vertical_mode == vanne_vertical_mode_presel %} selected="selected" {% endif %}>{{vanne_vertical_mode}}</option>
                 {% endfor %}
             </select>
             <input class="btn" type="submit" value="Submit">
