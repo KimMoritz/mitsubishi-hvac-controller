@@ -1,6 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
 from mitsubishi_hvac_controller.hvac import HVAC
-from hvac_ircontrol.mitsubishi import ClimateMode, VanneHorizontalMode, FanMode, VanneVerticalMode
 from mitsubishi_hvac_controller import app, db, bcrypt
 from mitsubishi_hvac_controller.forms import RegistrationForm, LoginForm, ResetPasswordForm
 from mitsubishi_hvac_controller.models import User, Setting
@@ -23,14 +22,34 @@ def write_settings_to_db(setting, temp, fan_mode, climate_mode, vanne_horizontal
     db.session.commit()
 
 
+def build_render_template(message):
+    hvac = HVAC()
+    hvac_variables = hvac.get_hvac_variables()
+    setting = db.session.query(Setting).get('last')
+    if setting is None:
+        setting = db.session.query(Setting).get('default')
+
+    return render_template('settings.html',
+                           temps=hvac_variables.get('temps').keys(),
+                           temp_presel=setting.temp,
+                           fan_modes=hvac_variables.get('fan_modes').keys(),
+                           fan_mode_presel=setting.fan_mode,
+                           climate_modes=hvac_variables.get('climate_modes').keys(),
+                           climate_mode_presel=setting.climate_mode,
+                           vanne_horizontal_modes=hvac_variables.get('vanne_horizontal_modes').keys(),
+                           vanne_horizontal_mode_presel=setting.vanne_horizontal_mode,
+                           vanne_vertical_modes=hvac_variables.get('vanne_vertical_modes').keys(),
+                           vanne_vertical_mode_presel=setting.vanne_vertical_mode,
+                           message=message
+                           )
+
+
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     if request.method == 'GET':
         return build_render_template(message='')
     if request.method == 'POST':
-        hvac = HVAC()
-
         req_form_variables = {'temp': request.form.get('temp'),
                               'fan_mode': request.form.get('fan_mode'),
                               'climate_mode': request.form.get('climate_mode'),
@@ -38,6 +57,7 @@ def settings():
                               'vanne_vertical_mode': request.form.get('vanne_vertical_mode')}
 
         write_settings_to_db(setting='last', **req_form_variables)
+        hvac = HVAC()
         hvac.set_heat(**req_form_variables)
 
         return build_render_template(message='Temperature set!')
@@ -98,32 +118,6 @@ def logout():
     logout_user()
     flash('Logged out!')
     return redirect(url_for('home'))
-
-
-def build_render_template(message):
-    hvac = HVAC()
-    hvac_variables = hvac.get_hvac_variables()
-
-    #TODO:change to last used, default to default (get both from db table "setting")
-    temp_presel = '20'
-    fan_mode_presel = 'Speed1'
-    climate_mode_presel = 'Hot'
-    vanne_horizontal_mode_presel = 'Middle'
-    vanne_vertical_mode_presel = 'Middle'
-
-    return render_template('settings.html',
-                           temps=hvac_variables.get('temps').keys(),
-                           temp_presel=temp_presel,
-                           fan_modes=hvac_variables.get('fan_modes').keys(),
-                           fan_mode_presel=fan_mode_presel,
-                           climate_modes=hvac_variables.get('climate_modes').keys(),
-                           climate_mode_presel=climate_mode_presel,
-                           vanne_horizontal_modes=hvac_variables.get('vanne_horizontal_modes').keys(),
-                           vanne_horizontal_mode_presel=vanne_horizontal_mode_presel,
-                           vanne_vertical_modes=hvac_variables.get('vanne_vertical_modes').keys(),
-                           vanne_vertical_mode_presel=vanne_vertical_mode_presel,
-                           message=message
-                           )
 
 
 @app.route("/reset_password", methods=['GET', 'POST'])
