@@ -36,7 +36,7 @@ class HVAC:
               str(vanne_horizontal_mode) + str(vanne_horizontal_mode))
 
         self.mitsubishi.send_command(
-            climate_mode=climate_mode,
+            climate_mode=int(climate_mode),
             temperature=temp,
             fan_mode=fan_mode,
             vanne_vertical_mode=vanne_vertical_mode,
