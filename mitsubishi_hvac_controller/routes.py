@@ -31,15 +31,15 @@ def build_render_template(message):
 
     return render_template('settings.html',
                            temps=hvac_variables.get('temps').keys(),
-                           temp_presel=hvac_variables.get('temps').get(setting.temp),
+                           temp_presel=setting.temp,
                            fan_modes=hvac_variables.get('fan_modes').keys(),
-                           fan_mode_presel=hvac_variables.get('fan_modes').get(setting.fan_mode),
+                           fan_mode_presel=setting.fan_mode,
                            climate_modes=hvac_variables.get('climate_modes').keys(),
-                           climate_mode_presel=hvac_variables.get('climate_modes').get(setting.climate_mode),
+                           climate_mode_presel=setting.climate_mode,
                            vanne_horizontal_modes=hvac_variables.get('vanne_horizontal_modes').keys(),
-                           vanne_horizontal_mode_presel=hvac_variables.get('vanne_horizontal_modes').get(setting.vanne_horizontal_mode),
+                           vanne_horizontal_mode_presel=setting.vanne_horizontal_mode,
                            vanne_vertical_modes=hvac_variables.get('vanne_vertical_modes').keys(),
-                           vanne_vertical_mode_presel=hvac_variables.get('vanne_vertical_modes').get(setting.vanne_vertical_mode),
+                           vanne_vertical_mode_presel=setting.vanne_vertical_mode,
                            message=message
                            )
 
