@@ -59,7 +59,11 @@ def settings():
                               'vanne_horizontal_mode': hvac_variables.get('vanne_horizontal_modes').get(form.get('vanne_horizontal_mode')),
                               'vanne_vertical_mode': hvac_variables.get('vanne_vertical_modes').get(form.get('vanne_vertical_mode'))}
 
-        write_settings_to_db(setting='last', **req_form_variables)
+        write_settings_to_db(setting='last', temp=form.get('temp'), fan_mode=form.get('fan_mode'),
+                             climate_mode=form.get('climate_mode'),
+                             vanne_horizontal_mode=form.get('vanne_horizontal_mode'),
+                             vanne_vertical_mode=form.get('vanne_vertical_mode'))
+
         hvac.set_heat(**req_form_variables)
 
         return build_render_template(message='Temperature set!')
