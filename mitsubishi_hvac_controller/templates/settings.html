@@ -4,8 +4,8 @@
         <h1>HVAC Controller</h1>
     </div>
     <div class="container">
-        <form id="turnoff" action="/off" method="POST" enctype="multipart/form-data">
-            <input class="btn" type="submit" value="Turn off"/>
+        <form id="turnoff" action="/power" method="POST" enctype="multipart/form-data">
+            <input class="btn" type="submit" value= {% if power==True %} "Turn off" {% else %} "Turn on" {% endif %} />
         </form>
     </div>
     <div class="container">
