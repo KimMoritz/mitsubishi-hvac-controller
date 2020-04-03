@@ -32,3 +32,11 @@ class Setting(db.Model):
                str(self.climate_mode) + ", " + \
                str(self.vanne_horizontal_mode) + ", " + \
                str(self.vanne_vertical_mode) + ")"
+
+
+class Power(db.Model):
+    id = db.Column(db.SmallInteger(), primary_key=True)
+    power = db.Column(db.Boolean(), nullable=False)
+
+    def __repr__(self):
+        return "Id: " + str(self.id) + ", power: " + str(self.power)

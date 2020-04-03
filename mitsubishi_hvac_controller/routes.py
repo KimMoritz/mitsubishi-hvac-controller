@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from mitsubishi_hvac_controller.hvac import HVAC
 from mitsubishi_hvac_controller import app, db, bcrypt
 from mitsubishi_hvac_controller.forms import RegistrationForm, LoginForm, ResetPasswordForm
-from mitsubishi_hvac_controller.models import User, Setting
+from mitsubishi_hvac_controller.models import User, Setting, Power
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -29,6 +29,8 @@ def build_render_template(message):
     if setting is None:
         setting = db.session.query(Setting).get('default')
 
+    power = db.session.query(Power).get(0)
+
     return render_template('settings.html',
                            temps=hvac_variables.get('temps').keys(),
                            temp_presel=setting.temp,
@@ -40,7 +42,8 @@ def build_render_template(message):
                            vanne_horizontal_mode_presel=setting.vanne_horizontal_mode,
                            vanne_vertical_modes=hvac_variables.get('vanne_vertical_modes').keys(),
                            vanne_vertical_mode_presel=setting.vanne_vertical_mode,
-                           message=message
+                           message=message,
+                           power=power.power
                            )
 
 
@@ -56,8 +59,10 @@ def settings():
         req_form_variables = {'temp': hvac_variables.get('temps').get(form.get('temp')),
                               'fan_mode': hvac_variables.get('fan_modes').get(form.get('fan_mode')),
                               'climate_mode': hvac_variables.get('climate_modes').get(form.get('climate_mode')),
-                              'vanne_horizontal_mode': hvac_variables.get('vanne_horizontal_modes').get(form.get('vanne_horizontal_mode')),
-                              'vanne_vertical_mode': hvac_variables.get('vanne_vertical_modes').get(form.get('vanne_vertical_mode'))}
+                              'vanne_horizontal_mode': hvac_variables.get('vanne_horizontal_modes').get(
+                                  form.get('vanne_horizontal_mode')),
+                              'vanne_vertical_mode': hvac_variables.get('vanne_vertical_modes').get(
+                                  form.get('vanne_vertical_mode'))}
 
         write_settings_to_db(setting='last', temp=form.get('temp'), fan_mode=form.get('fan_mode'),
                              climate_mode=form.get('climate_mode'),
@@ -75,13 +80,37 @@ def home():
     return render_template('home.html', title='Home')
 
 
-@app.route('/off', methods=['GET', 'POST'])
+@app.route('/power', methods=['GET', 'POST'])
 @login_required
-def turn_off():
+def power():
     hvac = HVAC()
-    hvac.turn_off()
-    print('Turned off!')
-    return build_render_template(message='Turned off!')
+    power = db.session.query(Power).get(0)
+
+    if power.power:
+        print("Turning off")
+        hvac.turn_off()
+        db.session.delete(power)
+        power_new = Power(id=0, power=not power.power)
+        db.session.add(power_new)
+        db.session.commit()
+        message = 'Turned off!'
+    else:
+        setting = db.session.query(Setting).get("last")
+        print("turning on")
+        setting_variables = {'temp': setting.temp,
+                             'fan_mode': setting.fan_mode,
+                             'climate_mode': setting.climate_mode,
+                             'vanne_horizontal_mode': setting.vanne_horizontal_mode,
+                             'vanne_vertical_mode': setting.vanne_vertical_mode}
+
+        hvac.set_heat(**setting_variables)
+        db.session.delete(power)
+        power_new = Power(id=0, power=not power.power)
+        db.session.add(power_new)
+        db.session.commit()
+        message = 'Turned on!'
+
+    return build_render_template(message=message)
 
 
 @app.route("/register", methods=['GET', 'POST'])

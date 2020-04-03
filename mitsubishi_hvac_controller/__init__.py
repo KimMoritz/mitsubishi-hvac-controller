@@ -13,7 +13,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-from mitsubishi_hvac_controller.models import User, Setting
+from mitsubishi_hvac_controller.models import User, Setting, Power
 db.create_all()
 if len(db.session.query(User).all()) == 0:
     print("Creating default admin user. Please change password ASAP.")
@@ -37,6 +37,14 @@ if len(db.session.query(Setting).all()) == 0:
     db.session.add(setting)
     db.session.commit()
 print(db.session.query(Setting).all())
+
+
+if len(db.session.query(Power).all()) == 0:
+    print("Creating default settings.")
+    power = Power(id=0, power=False)
+    db.session.add(power)
+    db.session.commit()
+print(db.session.query(Power).all())
 
 
 from mitsubishi_hvac_controller import routes
