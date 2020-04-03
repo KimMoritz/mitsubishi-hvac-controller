@@ -97,12 +97,12 @@ def power():
     else:
         setting = db.session.query(Setting).get("last")
         print("turning on")
-        print(setting)
-        setting_variables = {'temp': int(setting.temp),
-                             'fan_mode': int(setting.fan_mode),
-                             'climate_mode': int(setting.climate_mode),
-                             'vanne_horizontal_mode': int(setting.vanne_horizontal_mode),
-                             'vanne_vertical_mode': int(setting.vanne_vertical_mode)}
+        hvac_variables = hvac.get_hvac_variables()
+        setting_variables = {'temp': hvac_variables.get('temps').get(setting.temp),
+                             'fan_mode': hvac_variables.get('fan_modes').get(setting.fan_mode),
+                             'climate_mode': hvac_variables.get('climate_modes').get(setting.climate_mode),
+                             'vanne_horizontal_mode': hvac_variables.get('vanne_horizontal_modes').get(setting.vanne_horizontal_mode),
+                             'vanne_vertical_mode': hvac_variables.get('vanne_vertical_modes').get(setting.vanne_vertical_mode)}
 
         hvac.set_heat(**setting_variables)
         db.session.delete(power)
