@@ -19,6 +19,14 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
 
+    def validate_username_not_too_long(self, username):
+        if len(username) > 12:
+            raise ValidationError('This username is too long (>12 chars)')
+
+    def validate_username_not_too_short(self, username):
+        if len(username) <= 3:
+            raise ValidationError('This username is too short (<=3 chars)')
+
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
