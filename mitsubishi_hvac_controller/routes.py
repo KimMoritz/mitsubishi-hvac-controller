@@ -47,6 +47,17 @@ def build_render_template(message):
                            )
 
 
+def build_req_form_variables(form, hvac_variables):
+    req_form_variables = {'temp': hvac_variables.get('temps').get(form.get('temp')),
+                          'fan_mode': hvac_variables.get('fan_modes').get(form.get('fan_mode')),
+                          'climate_mode': hvac_variables.get('climate_modes').get(form.get('climate_mode')),
+                          'vanne_horizontal_mode': hvac_variables.get('vanne_horizontal_modes').get(
+                              form.get('vanne_horizontal_mode')),
+                          'vanne_vertical_mode': hvac_variables.get('vanne_vertical_modes').get(
+                              form.get('vanne_vertical_mode'))}
+    return req_form_variables
+
+
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
@@ -56,13 +67,7 @@ def settings():
         hvac = HVAC()
         hvac_variables = hvac.get_hvac_variables()
         form = request.form
-        req_form_variables = {'temp': hvac_variables.get('temps').get(form.get('temp')),
-                              'fan_mode': hvac_variables.get('fan_modes').get(form.get('fan_mode')),
-                              'climate_mode': hvac_variables.get('climate_modes').get(form.get('climate_mode')),
-                              'vanne_horizontal_mode': hvac_variables.get('vanne_horizontal_modes').get(
-                                  form.get('vanne_horizontal_mode')),
-                              'vanne_vertical_mode': hvac_variables.get('vanne_vertical_modes').get(
-                                  form.get('vanne_vertical_mode'))}
+        req_form_variables = build_req_form_variables(form, hvac_variables)
 
         write_settings_to_db(setting='last', temp=form.get('temp'), fan_mode=form.get('fan_mode'),
                              climate_mode=form.get('climate_mode'),
