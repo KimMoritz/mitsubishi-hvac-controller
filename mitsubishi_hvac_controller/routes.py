@@ -22,14 +22,12 @@ def write_settings_to_db(setting, temp, fan_mode, climate_mode, vanne_horizontal
     db.session.commit()
 
 
-def build_render_template(message):
+def build_settings_page(power, message):
     hvac = HVAC()
     hvac_variables = hvac.get_hvac_variables()
     setting = db.session.query(Setting).get('last')
     if setting is None:
         setting = db.session.query(Setting).get('default')
-
-    power = db.session.query(Power).get(0)
 
     return render_template('settings.html',
                            temps=hvac_variables.get('temps').keys(),
@@ -43,7 +41,7 @@ def build_render_template(message):
                            vanne_vertical_modes=hvac_variables.get('vanne_vertical_modes').keys(),
                            vanne_vertical_mode_presel=setting.vanne_vertical_mode,
                            message=message,
-                           power=power.power
+                           power=power
                            )
 
 
@@ -62,7 +60,8 @@ def build_req_form_variables(form, hvac_variables):
 @login_required
 def settings():
     if request.method == 'GET':
-        return build_render_template(message='')
+        power = db.session.query(Power).get(0)
+        return build_settings_page(power=power.power, message='')
     if request.method == 'POST':
         hvac = HVAC()
         hvac_variables = hvac.get_hvac_variables()
@@ -76,7 +75,7 @@ def settings():
 
         hvac.set_heat(**req_form_variables)
 
-        return build_render_template(message='Temperature set!')
+        return build_settings_page(power=True, message='Temperature set!')
 
 
 @app.route('/home', methods=['GET', 'POST'])
@@ -116,7 +115,7 @@ def power():
         db.session.commit()
         message = 'Turned on!'
 
-    return build_render_template(message=message)
+    return build_settings_page(power=not power.power, message=message)
 
 
 @app.route("/register", methods=['GET', 'POST'])
