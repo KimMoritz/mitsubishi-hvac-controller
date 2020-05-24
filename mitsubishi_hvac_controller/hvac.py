@@ -1,4 +1,4 @@
-import hvac_ircontrol
+import logging
 from hvac_ircontrol.ir_sender import LogLevel
 from hvac_ircontrol.mitsubishi import Mitsubishi, ISeeMode, AreaMode, PowerfulMode, FanMode, ClimateMode, \
     VanneHorizontalMode, VanneVerticalMode
@@ -32,7 +32,7 @@ class HVAC:
                                 'Top': VanneVerticalMode.Top}
 
     def set_heat(self, temp, fan_mode, climate_mode, vanne_horizontal_mode, vanne_vertical_mode):
-        print("Setting HVAC to : " + str(temp) + str(fan_mode) + str(climate_mode) +
+        logging.info("Setting HVAC to : " + str(temp) + str(fan_mode) + str(climate_mode) +
               str(vanne_horizontal_mode) + str(vanne_horizontal_mode))
 
         self.mitsubishi.send_command(
@@ -46,7 +46,7 @@ class HVAC:
             powerful=PowerfulMode.PowerfulOff)
 
     def turn_off(self):
-        print("Turning off")
+        logging.info("Turning off")
         self.mitsubishi.power_off()
 
     def get_hvac_variables(self):
