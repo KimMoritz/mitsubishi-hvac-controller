@@ -1,3 +1,4 @@
+import logging
 from flask import render_template, url_for, flash, redirect, request
 from mitsubishi_hvac_controller.hvac import HVAC
 from mitsubishi_hvac_controller import app, db, bcrypt
@@ -5,8 +6,8 @@ from mitsubishi_hvac_controller.forms import RegistrationForm, LoginForm, ResetP
 from mitsubishi_hvac_controller.models import User, Setting, Power
 from flask_login import login_user, current_user, logout_user, login_required
 
-
 def write_settings_to_db(setting, temp, fan_mode, climate_mode, vanne_horizontal_mode, vanne_vertical_mode):
+    logging.info('Writing settings to db: ' + setting + temp + fan_mode + climate_mode + vanne_horizontal_mode + vanne_vertical_mode)
     setting = Setting(
         setting=setting,
         temp=temp,
@@ -17,8 +18,11 @@ def write_settings_to_db(setting, temp, fan_mode, climate_mode, vanne_horizontal
     )
     last = db.session.query(Setting).get('last')
     if last is not None:
+        logging.info('Deleting last setting from db.')
         db.session.delete(last)
+    logging.info('Adding new setting to db.')
     db.session.add(setting)
+    logging.info('Committing changes')
     db.session.commit()
 
 
@@ -60,6 +64,7 @@ def build_req_form_variables(form, hvac_variables):
 @login_required
 def settings():
     if request.method == 'GET':
+        logging.info('GET /settings')
         power = db.session.query(Power).get(0)
         return build_settings_page(power=power.power, message='')
     if request.method == 'POST':
@@ -91,7 +96,7 @@ def power():
     power = db.session.query(Power).get(0)
 
     if power.power:
-        print("Turning off")
+        logging.info("Turning off")
         hvac.turn_off()
         db.session.delete(power)
         power_new = Power(id=0, power=not power.power)
@@ -100,7 +105,7 @@ def power():
         message = 'Turned off!'
     else:
         setting = db.session.query(Setting).get("last")
-        print("turning on")
+        logging.info("Turning on")
         hvac_variables = hvac.get_hvac_variables()
         setting_variables = {'temp': hvac_variables.get('temps').get(setting.temp),
                              'fan_mode': hvac_variables.get('fan_modes').get(setting.fan_mode),
@@ -115,12 +120,14 @@ def power():
         db.session.commit()
         message = 'Turned on!'
 
+    logging.info(message)
     return build_settings_page(power=not power.power, message=message)
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if not current_user.is_authenticated:
+        logging.info('User not authenticated.')
         return redirect(url_for('home'))
     registration_form = RegistrationForm()
     if registration_form.validate_on_submit():
@@ -133,6 +140,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
+        logging.info('Account created.')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=registration_form)
 
@@ -140,6 +148,7 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
+        logging.info('User not authenticated.')
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -158,6 +167,7 @@ def login():
 def logout():
     logout_user()
     flash('Logged out!')
+    logging.info('Logged out.')
     return redirect(url_for('home'))
 
 
