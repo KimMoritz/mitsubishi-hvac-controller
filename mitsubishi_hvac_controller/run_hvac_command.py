@@ -1,4 +1,3 @@
-from mitsubishi_hvac_controller.hvac import HVAC
 from hvac_ircontrol.mitsubishi import Mitsubishi, ISeeMode, AreaMode, PowerfulMode, FanMode, ClimateMode, \
     VanneHorizontalMode, VanneVerticalMode
 hvac = HVAC()
