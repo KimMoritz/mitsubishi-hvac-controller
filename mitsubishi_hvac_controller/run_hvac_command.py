@@ -1,8 +1,8 @@
+from hvac_ircontrol.ir_sender import LogLevel
 from hvac_ircontrol.mitsubishi import Mitsubishi, ISeeMode, AreaMode, PowerfulMode, FanMode, ClimateMode, \
     VanneHorizontalMode, VanneVerticalMode
-hvac = HVAC()
 mitsubishi = Mitsubishi(22, LogLevel.ErrorsOnly)
-self.mitsubishi.send_command(
+mitsubishi.send_command(
             climate_mode=ClimateMode.Hot,
             temperature=21,
             fan_mode=FanMode.Speed1,
