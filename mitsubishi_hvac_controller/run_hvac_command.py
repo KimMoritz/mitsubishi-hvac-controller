@@ -5,7 +5,7 @@ mitsubishi = Mitsubishi(22, LogLevel.ErrorsOnly)
 mitsubishi.send_command(
             climate_mode=ClimateMode.Hot,
             temperature=21,
-            fan_mode=FanMode.Speed1,
+            fan_mode=FanMode.Speed2,
             vanne_vertical_mode=VanneVerticalMode.MiddleBottom,
             vanne_horizontal_mode=VanneHorizontalMode.Middle,
             isee_mode=ISeeMode.ISeeOff,
